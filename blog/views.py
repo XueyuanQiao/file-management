@@ -25,20 +25,21 @@ def home(request):
     }
     return render(request, 'blog/home.html', context)
 
+
 def search(request):
-    template='blog/home.html'
+    template = 'blog/home.html'
 
-    query=request.GET.get('q')
+    query = request.GET.get('q')
 
-    result=Post.objects.filter(Q(title__icontains=query) | Q(author__username__icontains=query) | Q(content__icontains=query))
-    paginate_by=2
-    context={ 'posts':result }
-    return render(request,template,context)
-   
+    result = Post.objects.filter(
+        Q(title__icontains=query) | Q(author__username__icontains=query) | Q(content__icontains=query))
+    paginate_by = 10
+    context = {'posts': result}
+    return render(request, template, context)
 
 
 def getfile(request):
-   return serve(request, 'File')
+    return serve(request, 'File')
 
 
 class PostListView(ListView):
@@ -46,15 +47,15 @@ class PostListView(ListView):
     template_name = 'blog/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
     ordering = ['-date_posted']
-    paginate_by = 2
+    paginate_by = 10
 
 
 class UserPostListView(ListView):
     model = Post
     template_name = 'blog/user_posts.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
-    paginate_by = 2
-    
+    paginate_by = 10
+
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
@@ -69,7 +70,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'blog/post_form.html'
     fields = ['title', 'content', 'file']
-    
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -84,7 +85,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-    def dispatch(self, request, *args, **kwargs): # new 
+    def dispatch(self, request, *args, **kwargs):  # new
         obj = self.get_object()
         if obj.author != self.request.user:
             raise PermissionDenied
@@ -96,14 +97,12 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/'
     template_name = 'blog/post_confirm_delete.html'
 
-    def dispatch(self, request, *args, **kwargs): # new 
+    def dispatch(self, request, *args, **kwargs):  # new
         obj = self.get_object()
         if obj.author != self.request.user:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
 
-
 class AboutPage(TemplateView):
     template_name = 'blog/about.html'
-    

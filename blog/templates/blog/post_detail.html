@@ -7,7 +7,7 @@
     <div class="media-body">
       <div class="">
         <div class="d-flex justify-content-between">
-        <a class="mr-2 mt-0 mb-0  text-dark" href="{% url 'user-posts' object.author.username  %}"><h3>{{ object.author }}</h3></a>
+        <a class="mr-2 mt-0 mb-0  text-dark" href="{% url 'user-posts' object.author.username  %}"><h4>{{ object.author }}</h4></a>
         <small class="text-muted  text-align-right">{{ object.date_upload }}</small>
         </div>
         {% if object.author != user %}
@@ -23,25 +23,25 @@
           </div>
         {% endif %}
       </div>
+      <h6>标题：{{ object.title }}</h6>
+      <p class="article-content">描述：{{ object.content }}</p>
       <div>
         {% if object.file %}
           {% if object.extension == '.jpg' or object.extension == 'jpeg' or object.extension == 'png' %}
             <a href="{{ object.file.url }}"  ><img src="{{ object.file.url }}" alt="" class="img-fluid "></a>
-            <a href="{{ object.file.url }}"  class="text-dark"><h5>{{ object.file }}</h5></a>
+            <a href="{{ object.file.url }}"  class="text-dark"><h6>{{ object.file }}</h6></a>
           {% elif object.extension == '.mp4' %}
             <div class="embed-responsive embed-responsive-16by9">
               <video id="video-1_html_api" class="vjs-tech" preload="auto" autoplay >
                 <source src="{{ object.file.url }}" type="video/mp4" class="embed-responsive">
               </video>
             </div>
-            <a href="{{ object.file.url }}"  class="text-dark"><h5>{{ object.file }}</h5></a>
+            <a href="{{ object.file.url }}"  class="text-dark"><h6>{{ object.file }}</h6></a>
           {% else %}
-            <a href="{{ object.file.url }}"  class="text-dark"><h5>{{ object.file }}</h5></a>
+            <a href="{{ object.file.url }}"  class="text-dark"><h6>{{ object.file }}</h6></a>
           {% endif %}
         {% endif %}
       </div>
-      <h2>{{ object.title }}</h2>
-      <p class="article-content">{{ object.content }}</p>
     </div>
   </article>
 {% endblock content %}
